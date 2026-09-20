@@ -1,0 +1,16 @@
+# Core API
+fastapi==0.141.1
+uvicorn[standard]==0.53.0
+pydantic==2.13.5
+
+# ML / data
+scikit-learn==1.8.0
+xgboost==3.4.1
+shap==0.52.0
+pandas==3.0.2
+numpy==2.4.4
+joblib==1.5.3
+
+# EDA / plotting (used by model.py)
+matplotlib==3.10.8
+seaborn==0.13.2

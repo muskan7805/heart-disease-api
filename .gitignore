@@ -1,0 +1,36 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+server.log
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Optional: uncomment if you don't want to ship the trained model / plots
+# heart_model.pkl
+# static/*.png
