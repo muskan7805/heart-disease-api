@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 import shap
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 MODEL_PATH = "heart_model.pkl"
@@ -54,7 +55,12 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
-
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # --------------------------------------------------------------------------- #
 # Request / response schemas
