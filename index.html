@@ -1,65 +1,31 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Heart Disease Predictor - Muskan</title>
+<head><title>Heart Predictor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body{font-family: Arial; background:#f0f4f8; padding:20px}
-.card{max-width:500px; margin:auto; background:white; padding:25px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1)}
-h2{text-align:center; color:#e63946}
-input,select{width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:8px}
-button{width:100%; padding:12px; background:#e63946; color:white; border:none; border-radius:8px; font-size:16px; cursor:pointer}
-#result{margin-top:20px; padding:15px; border-radius:10px; text-align:center; font-weight:bold; display:none}
-</style>
-</head>
+body{font-family:Arial;background:#f0f4f8;padding:15px}
+.card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:15px}
+label{font-weight:bold;font-size:13px;display:block;margin-top:12px}
+input,select{width:100%;padding:10px;margin-top:5px;border-radius:8px;border:1px solid #ccc}
+button{width:100%;padding:12px;background:#e63946;color:white;border:none;border-radius:8px;margin-top:15px;font-size:16px}
+</style></head>
 <body>
 <div class="card">
-<h2>❤️ Heart Disease Predictor</h2>
-<p style="text-align:center; font-size:12px">Live AI Model by Muskan</p>
-
-<input id="age" type="number" placeholder="Age (e.g. 63)">
-<select id="sex"><option value="1">Male</option><option value="0">Female</option></select>
-<input id="cp" type="number" placeholder="Chest Pain Type (0-3)" value="3">
-<input id="trestbps" type="number" placeholder="Resting BP (e.g. 145)" value="145">
-<input id="chol" type="number" placeholder="Cholesterol (e.g. 233)" value="233">
-<input id="thalach" type="number" placeholder="Max Heart Rate (e.g. 150)" value="150">
-<input id="oldpeak" type="number" step="0.1" placeholder="Oldpeak (e.g. 2.3)" value="2.3">
-
+<h2 style="text-align:center;color:#e63946">❤️ Heart Predictor</h2>
+<label>1. Age (Umar) e.g. 45</label><input id="age" type="number" placeholder="63">
+<label>2. Gender</label><select id="sex"><option value="1">Male</option><option value="0">Female</option></select>
+<label>3. Chest Pain 0-3 (0=No pain)</label><input id="cp" type="number" value="3">
+<label>4. BP e.g. 120</label><input id="trestbps" type="number" value="145">
+<label>5. Cholesterol e.g. 200</label><input id="chol" type="number" value="233">
+<label>6. Max Heart Rate e.g. 150</label><input id="thalach" type="number" value="150">
+<label>7. Oldpeak e.g. 2.3</label><input id="oldpeak" type="number" value="2.3" step="0.1">
 <button onclick="predict()">Predict Risk</button>
-<div id="result"></div>
-<p style="text-align:center; font-size:10px; margin-top:15px">API: heart-disease-api-ew83.onrender.com</p>
+<div id="result" style="margin-top:15px;text-align:center;font-weight:bold"></div>
 </div>
-
 <script>
 async function predict(){
-  const resultDiv = document.getElementById('result');
-  resultDiv.style.display='block';
-  resultDiv.innerHTML='⏳ Predicting...';
-  
-  const data = {
-    age: parseInt(document.getElementById('age').value),
-    sex: parseInt(document.getElementById('sex').value),
-    cp: parseInt(document.getElementById('cp').value),
-    trestbps: parseInt(document.getElementById('trestbps').value),
-    chol: parseInt(document.getElementById('chol').value),
-    fbs: 1, restecg: 0, thalach: parseInt(document.getElementById('thalach').value),
-    exang: 0, oldpeak: parseFloat(document.getElementById('oldpeak').value),
-    slope: 0, ca: 0, thal: 1
-  };
-
-  try{
-    const res = await fetch('https://heart-disease-api-ew83.onrender.com/predict', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    });
-    const out = await res.json();
-    resultDiv.style.background = out.risk_level === 'High' ? '#ffcccc' : '#ccffcc';
-    resultDiv.innerHTML = `Result: ${out.prediction} <br> Risk: ${out.risk_level} <br> Confidence: ${out.confidence}`;
-  } catch(e){
-    resultDiv.innerHTML = 'API waking up... wait 30 sec and try again (Free server sleeps)';
-  }
+document.getElementById('result').innerHTML='⏳ Predicting...';
+const data={age:+age.value||63,sex:+sex.value,cp:+cp.value,trestbps:+trestbps.value||145,chol:+chol.value||233,fbs:1,restecg:0,thalach:+thalach.value||150,exang:0,oldpeak:+oldpeak.value||2.3,slope:0,ca:0,thal:1};
+try{let r=await fetch('https://heart-disease-api-ew83.onrender.com/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let o=await r.json();document.getElementById('result').innerHTML=`Result: ${o.prediction}<br>Risk: ${o.risk_level}<br>Confidence: ${o.confidence}`;}catch(e){document.getElementById('result').innerHTML='API so raha hai, 30sec baad fir dabao';}
 }
-</script>
-</body>
-</html>
+</script></body></html>
