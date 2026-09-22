@@ -1,31 +1,32 @@
 <!DOCTYPE html>
-<html>
-<head><title>Heart Predictor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{font-family:Arial;background:#f0f4f8;padding:15px}
-.card{max-width:500px;margin:auto;background:white;padding:25px;border-radius:15px}
-label{font-weight:bold;font-size:13px;display:block;margin-top:12px}
-input,select{width:100%;padding:10px;margin-top:5px;border-radius:8px;border:1px solid #ccc}
-button{width:100%;padding:12px;background:#e63946;color:white;border:none;border-radius:8px;margin-top:15px;font-size:16px}
-</style></head>
-<body>
-<div class="card">
-<h2 style="text-align:center;color:#e63946">❤️ Heart Predictor</h2>
-<label>1. Age (Umar) e.g. 45</label><input id="age" type="number" placeholder="63">
-<label>2. Gender</label><select id="sex"><option value="1">Male</option><option value="0">Female</option></select>
-<label>3. Chest Pain 0-3 (0=No pain)</label><input id="cp" type="number" value="3">
-<label>4. BP e.g. 120</label><input id="trestbps" type="number" value="145">
-<label>5. Cholesterol e.g. 200</label><input id="chol" type="number" value="233">
-<label>6. Max Heart Rate e.g. 150</label><input id="thalach" type="number" value="150">
-<label>7. Oldpeak e.g. 2.3</label><input id="oldpeak" type="number" value="2.3" step="0.1">
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Heart Disease Predictor</title>
+<style>body{font-family:Arial;max-width:600px;margin:auto;padding:20px}input{width:100%;padding:8px;margin:5px 0}button{background:#ff4757;color:white;padding:12px;width:100%;border:none;font-size:18px;border-radius:8px} #result{margin-top:15px;padding:10px;border-radius:8px}</style>
+</head><body>
+<h2>Heart Disease Risk Prediction</h2>
+<p>Model: XGBoost (Render: ew83)</p>
+Age: <input id="age" value="63" type="number">
+Sex (1=M,0=F): <input id="sex" value="1" type="number">
+CP (0-3): <input id="cp" value="3" type="number">
+BP: <input id="trestbps" value="145" type="number">
+Chol: <input id="chol" value="233" type="number">
 <button onclick="predict()">Predict Risk</button>
-<div id="result" style="margin-top:15px;text-align:center;font-weight:bold"></div>
-</div>
+<div id="result">Result yaha ayega</div>
 <script>
+const API = "https://heart-disease-api-ew83.onrender.com";
 async function predict(){
-document.getElementById('result').innerHTML='⏳ Predicting...';
-const data={age:+age.value||63,sex:+sex.value,cp:+cp.value,trestbps:+trestbps.value||145,chol:+chol.value||233,fbs:1,restecg:0,thalach:+thalach.value||150,exang:0,oldpeak:+oldpeak.value||2.3,slope:0,ca:0,thal:1};
-try{let r=await fetch('https://heart-disease-api-ew83.onrender.com/predict',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});let o=await r.json();document.getElementById('result').innerHTML=`Result: ${o.prediction}<br>Risk: ${o.risk_level}<br>Confidence: ${o.confidence}`;}catch(e){document.getElementById('result').innerHTML='API so raha hai, 30sec baad fir dabao';}
+  let r = document.getElementById('result');
+  r.innerHTML = "⏳ API ko jaga rahe hain... (Free plan pe 50 sec lagta hai) Please wait...";
+  let data = {
+    age: +age.value, sex: +sex.value, cp: +cp.value, trestbps: +trestbps.value,
+    chol: +chol.value, fbs:0, restecg:0, thalach:150, exang:0, oldpeak:2.3, slope:0, ca:0, thal:1
+  };
+  try{
+    let res = await fetch(API+"/predict", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data)});
+    let j = await res.json();
+    r.innerHTML = "<b>Result:</b> Risk = " + j.risk_probability + "<br><pre>"+JSON.stringify(j,null,2)+"</pre>";
+  }catch(e){
+    r.innerHTML = "⚠️ API abhi so gaya tha, 55 sec me auto-retry ho raha hai... Please wait, page band mat karo.";
+    setTimeout(predict, 55000);
+  }
 }
 </script></body></html>
