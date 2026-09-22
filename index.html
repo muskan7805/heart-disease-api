@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Heart Disease Predictor - Muskan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family: Arial; background:#f0f4f8; padding:20px}
+.card{max-width:500px; margin:auto; background:white; padding:25px; border-radius:15px; box-shadow:0 5px 20px rgba(0,0,0,0.1)}
+h2{text-align:center; color:#e63946}
+input,select{width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:8px}
+button{width:100%; padding:12px; background:#e63946; color:white; border:none; border-radius:8px; font-size:16px; cursor:pointer}
+#result{margin-top:20px; padding:15px; border-radius:10px; text-align:center; font-weight:bold; display:none}
+</style>
+</head>
+<body>
+<div class="card">
+<h2>❤️ Heart Disease Predictor</h2>
+<p style="text-align:center; font-size:12px">Live AI Model by Muskan</p>
+
+<input id="age" type="number" placeholder="Age (e.g. 63)">
+<select id="sex"><option value="1">Male</option><option value="0">Female</option></select>
+<input id="cp" type="number" placeholder="Chest Pain Type (0-3)" value="3">
+<input id="trestbps" type="number" placeholder="Resting BP (e.g. 145)" value="145">
+<input id="chol" type="number" placeholder="Cholesterol (e.g. 233)" value="233">
+<input id="thalach" type="number" placeholder="Max Heart Rate (e.g. 150)" value="150">
+<input id="oldpeak" type="number" step="0.1" placeholder="Oldpeak (e.g. 2.3)" value="2.3">
+
+<button onclick="predict()">Predict Risk</button>
+<div id="result"></div>
+<p style="text-align:center; font-size:10px; margin-top:15px">API: heart-disease-api-ew83.onrender.com</p>
+</div>
+
+<script>
+async function predict(){
+  const resultDiv = document.getElementById('result');
+  resultDiv.style.display='block';
+  resultDiv.innerHTML='⏳ Predicting...';
+  
+  const data = {
+    age: parseInt(document.getElementById('age').value),
+    sex: parseInt(document.getElementById('sex').value),
+    cp: parseInt(document.getElementById('cp').value),
+    trestbps: parseInt(document.getElementById('trestbps').value),
+    chol: parseInt(document.getElementById('chol').value),
+    fbs: 1, restecg: 0, thalach: parseInt(document.getElementById('thalach').value),
+    exang: 0, oldpeak: parseFloat(document.getElementById('oldpeak').value),
+    slope: 0, ca: 0, thal: 1
+  };
+
+  try{
+    const res = await fetch('https://heart-disease-api-ew83.onrender.com/predict', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+    const out = await res.json();
+    resultDiv.style.background = out.risk_level === 'High' ? '#ffcccc' : '#ccffcc';
+    resultDiv.innerHTML = `Result: ${out.prediction} <br> Risk: ${out.risk_level} <br> Confidence: ${out.confidence}`;
+  } catch(e){
+    resultDiv.innerHTML = 'API waking up... wait 30 sec and try again (Free server sleeps)';
+  }
+}
+</script>
+</body>
+</html>
